@@ -1,0 +1,16 @@
+\mytitle{\Large Axiomas de Probabilidad}\\[0.1cm]
+
+Axioma 1: $0 \leq P(E) \leq 1$\\
+Axioma 2: $P(S)=1$\\
+Axioma 3: $P\left(\bigcup E_i \right) =  \sum P\left(E_i\right)$, with $E_i \cap E_j = \emptyset$ when $i\neq j$\\[0.5cm]
+
+
+Si $E \subset F$ entonces:\\
+\begin{align*}
+F &= E \cup E^c F = EF \cup E^c F\\
+P(F) &= P(E) + P(E^c F)\\
+&= P(EF) + P(E^c F)\\
+P(E\cup F) &= P(E\cup E^c F)\\
+&= P(E) + P(E^c F)\\
+&= P(E) + P(F) - P(EF)
+\end{align*}
