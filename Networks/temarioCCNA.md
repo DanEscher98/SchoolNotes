@@ -181,3 +181,15 @@
 6. `[·]` Recognize the capabilities of configuration management mechanisms
     Puppet, Chef, and Ansible
 7. `[·]` Interpret JSON encoded data
+la capa OSI, capa TCP/IP
+
+protocolos de switching 
+las VLANs, 
+el Spanning-Tree Protocol,
+el VLAN Trunking Protocol 
+y protocolos importantes de capa 2, 
+
+temario de routing:
+protocolos de enrutamiento estático,
+protocolos de enrutamiento dinámico: OSPF, RIP, EIGRP
+protocolos de redundancia de routers a nivel L3: HSRP, VRRP, GLBP
