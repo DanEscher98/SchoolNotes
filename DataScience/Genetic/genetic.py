@@ -59,22 +59,29 @@ def _mutate(parent, gene_set, get_fitness):
     return Chromosome(child_genes, fitness)
 
 
+def _get_improvement(new_child, generate_parent):
+    best_parent = generate_parent
+    yield best_parent
+    while True:
+        child = new_child(best_parent)
+        if best_parent.fitness > child.fitness:
+            continue
+        if not child.fitness > best_parent.fitness:
+            best_parent = child
+            continue
+        yield child
+        best_parent = child
+
+
 def get_best(display, get_fitness, target_len,
              optimal_fitness, gene_set):
     """Algorithm loop. Mutates until the fitness of child is
     equal or better than the optimal_fitness"""
     random.seed()
-    best_parent = _generate_parent(
-        target_len, gene_set, get_fitness)
-    display(best_parent)
-    if not optimal_fitness > best_parent.fitness:
-        return best_parent
-
-    while True:
-        child = _mutate(best_parent, gene_set, get_fitness)
-        if child.fitness > best_parent.fitness:
-            display(child)
-            if optimal_fitness > child.fitness:
-                best_parent.fitness = child.fitness
-                best_parent = child
-            else: return child # Success!
+    for improvement in _get_improvement(
+        lambda parent: _mutate(parent, gene_set, get_fitness),
+        _generate_parent(target_len, gene_set, get_fitness)):
+        display(improvement)
+        if not optimal_fitness > improvement.fitness:
+            return improvement
+    

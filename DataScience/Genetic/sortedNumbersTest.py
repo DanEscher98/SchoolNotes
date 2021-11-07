@@ -33,7 +33,7 @@ class Fitness:
             return self.total_gap < other.total_gap
 
     def __str__(self):
-        return "Sequential: {0}, Total Gap: {1}".format(
+        return "Sequential: {0:2d}, Total Gap: {1:3d}".format(
             self.count_nums_inseq, self.total_gap)
 
 
