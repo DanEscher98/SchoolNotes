@@ -16,6 +16,20 @@ class graphColoring(unittest.TestCase):
         color_lookup = { color[0]: color for color in colors }
         genset = list(color_lookup.keys())
 
+        start_t = datetime.datetime.now()
+        best = genetic.get_best(
+            lambda candidate: display(candidate, start_t),
+            lambda genes: get_fitness(genes, rules,
+                                      state_index_lookup),
+            len(states), optimal_value, geneset)
+        self.assertTrue(not optimal_value > best.Fitness)
+
+        keys = sorted(states.keys())
+        for index in range(len(states)):
+            print(keys[index] + " is " +
+                  color_lookup[best.genes[index]])
+        
+
 def load_data(local_filename):
     with open(local_filename, mode='r') as file:
         render = csv.reader(file)
