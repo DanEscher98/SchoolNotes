@@ -2,9 +2,10 @@ import unittest
 import datetime
 import genetic
 
+
 class sortedNumbersTest(unittest.TestCase):
-    def test_benchmark(self):
-        genetic.Benchmark.run(lambda: self.sort_numbers(20))
+    # def test_benchmark(self):
+    #   genetic.Benchmark.run(lambda: self.sort_numbers(20))
 
     def test_sort_10_numbers(self):
         self.sort_numbers(10)

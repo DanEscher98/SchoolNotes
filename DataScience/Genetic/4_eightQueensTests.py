@@ -4,7 +4,7 @@ import genetic
 
 
 class eightQueensTests(unittest.TestCase):
-    def test(self, size=10):
+    def test(self, size=8):
         geneset = [i for i in range(size)]
         start_t = datetime.datetime.now()
         optimal_fitness = Fitness(0)
@@ -38,15 +38,15 @@ class Board:
         for column in range(0, len(genes)):
             row = genes[column]
             board[row][column] = 'Q'
-        self._board = board
+        self.board = board
 
     def print(self):
         # 0,0 prints in bottom left corner
-        for i in reversed(range(0, len(self._board))):
-            print('  '.join(self._board[i]))
+        for i in reversed(range(0, len(self.board))):
+            print('  '.join(self.board[i]))
 
     def get(self, row, column):
-        return self._board[column][row]
+        return self.board[column][row]
 
 
 def get_fitness(genes, size):
@@ -75,7 +75,7 @@ def display(candidate, start_t, size):
     board = Board(candidate.genes, size)
     board.print()
     print("{0}\t=> {1}\t{2}\n".format(
-        '  '.join(map(str, candidate.genes)),
+        '  '.join(map(lambda n: str(n+1), candidate.genes)),
         candidate.fitness,
         str(time_diff)))
 

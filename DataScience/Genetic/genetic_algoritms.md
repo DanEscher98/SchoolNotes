@@ -18,3 +18,28 @@ title: Genetic Algorithms
 - The **fitness function** evaluates the Phenotype in the context of
     the problem being solved to return a fitness value to the
     algorithm.
+
+## Algorithm
+
+```haskell
+data Fitness = Fitness Int
+    deriving (Show, Eq)
+
+data Chromosome a = G [a] Fitness
+```
+
+```python
+# Basic implementation
+generate_parent(length, geneset) -> Chromosome
+mutate(parent, geneset) -> Chromosome:
+    """Change one gene from parent by a random one from genes."""
+
+# Main Loop
+parent = generate_parent(length, geneset)
+while optimal_fitness > fitness(parent):
+    child = mutate(child, geneset)
+    if not fitness(child) > fitness(parent):
+        parent = child
+```
+
+
