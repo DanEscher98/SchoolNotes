@@ -2,6 +2,7 @@ import unittest
 import datetime
 import genetic
 
+
 class eightQueensTests(unittest.TestCase):
     def test(self, size=10):
         geneset = [i for i in range(size)]
@@ -23,10 +24,10 @@ class Fitness:
 
     def __init__(self, total):
         self.total = total
-    
+
     def __gt__(self, other):
         return self.total < other.total
-    
+
     def __str__(self):
         return "{0}".format(self.total)
 
@@ -43,7 +44,7 @@ class Board:
         # 0,0 prints in bottom left corner
         for i in reversed(range(0, len(self._board))):
             print('  '.join(self._board[i]))
-    
+
     def get(self, row, column):
         return self._board[column][row]
 
@@ -62,10 +63,10 @@ def get_fitness(genes, size):
                 northEastDiagonalsWithQueens.add(row + col)
                 southEastDiagonalsWithQueens.add(size - 1 -
                                                  row + col)
-    total = 4 * size - (len(rowsWithQueens) + \
-                       len(colsWithQueens) + \
-                       len(northEastDiagonalsWithQueens) + \
-                       len(southEastDiagonalsWithQueens))
+    total = 4 * size - (len(rowsWithQueens) +
+                        len(colsWithQueens) +
+                        len(northEastDiagonalsWithQueens) +
+                        len(southEastDiagonalsWithQueens))
     return Fitness(total)
 
 
@@ -78,5 +79,6 @@ def display(candidate, start_t, size):
         candidate.fitness,
         str(time_diff)))
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     unittest.main()

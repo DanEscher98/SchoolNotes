@@ -3,6 +3,7 @@ import statistics
 import time
 import sys
 
+
 class Benchmark:
     @staticmethod
     def run(function):
@@ -21,13 +22,13 @@ class Benchmark:
                 print("{0} {1:3.2f} {2:3.2f}".format(
                     1 + i, mean,
                     statistics.stdev(timings, mean)
-                    if i > 1 else 0 ))
+                    if i > 1 else 0))
 
 
 class Chromosome:
     genes = None
     fitness = None
-    
+
     def __init__(self, genes, fitness):
         self.genes = genes
         self.fitness = fitness
@@ -59,29 +60,25 @@ def _mutate(parent, gene_set, get_fitness):
     return Chromosome(child_genes, fitness)
 
 
-def _get_improvement(new_child, generate_parent):
-    best_parent = generate_parent
+def _get_improvement(target_len, gene_set, get_fitness):
+    best_parent = _generate_parent(target_len, gene_set, get_fitness)
     yield best_parent
     while True:
-        child = new_child(best_parent)
-        if best_parent.fitness > child.fitness:
-            continue
-        if not child.fitness > best_parent.fitness:
+        child = _mutate(best_parent, gene_set, get_fitness)
+        if not best_parent.fitness > child.fitness:
+            if child.fitness > best_parent.fitness:
+                yield child
             best_parent = child
-            continue
-        yield child
-        best_parent = child
 
 
 def get_best(display, get_fitness, target_len,
-             optimal_fitness, gene_set):
+             optimal_fitness, gene_set, custom_mutate=None):
     """Algorithm loop. Mutates until the fitness of child is
     equal or better than the optimal_fitness"""
     random.seed()
-    for improvement in _get_improvement(
-        lambda parent: _mutate(parent, gene_set, get_fitness),
-        _generate_parent(target_len, gene_set, get_fitness)):
+    improvements = _get_improvement(target_len, gene_set,
+                                    get_fitness)
+    for improvement in improvements:
         display(improvement)
         if not optimal_fitness > improvement.fitness:
             return improvement
-    
