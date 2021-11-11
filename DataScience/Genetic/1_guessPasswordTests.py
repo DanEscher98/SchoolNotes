@@ -22,8 +22,7 @@ class guessPasswordTests(unittest.TestCase):
     upper_case = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
     numbers = "0123456789"
     ascii_chars = " ,.!?@_-"
-    gene_set = lower_case + upper_case + \
-        numbers + ascii_chars
+    gene_set = lower_case + upper_case + numbers + ascii_chars
 
     def test_Hello_World(self):
         target = "Hello World! My name is Daniel"
@@ -44,9 +43,9 @@ def guess_password(target, gene_set):
     start_t = datetime.datetime.now()
     optimal_fitness = len(target)
     return genetic.get_best(
+        gene_set, len(target), optimal_fitness,
         lambda guess: display(guess, target, start_t),
-        lambda guess: get_fitness(guess, target),
-        optimal_fitness, optimal_fitness, gene_set)
+        lambda guess: get_fitness(guess, target))
 
 
 if __name__ == '__main__':

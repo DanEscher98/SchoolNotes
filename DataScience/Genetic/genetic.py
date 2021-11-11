@@ -4,6 +4,80 @@ import time
 import sys
 
 
+def _initparent(length, geneset, get_fitness):
+    genes = []
+    while len(genes) < length:
+        sample_size = min(length - len(genes), len(geneset))
+        genes.extend(random.sample(geneset, sample_size))
+    fitness = get_fitness(genes)
+    return Chromosome(genes, fitness)
+
+
+def _mutate_typeA(genes, geneset):
+    index = random.randrange(0, len(genes))
+    new_gene, aux_gene = random.sample(geneset, 2)
+    genes[index] = aux_gene \
+        if new_gene == genes[index] \
+        else new_gene
+    return genes
+
+
+def _mutate(parent, get_fitness, mutation_type):
+    genes = parent.genes[:]
+    genes = mutation_type(genes)
+    fitness = get_fitness(genes)
+    return Chromosome(genes, fitness)
+
+
+def _evolution(mutate, init_parent):
+    count = 0
+    parent = init_parent()
+    yield (parent, count)
+    while True:
+        child = mutate(parent)
+        count += 1
+        if not parent.fitness > child.fitness:
+            if child.fitness > parent.fitness:
+                yield (child, count)
+                count = 0
+            parent = child
+
+
+def get_best(gene_set, length, optimal_fitness,
+             display, get_fitness, custom_mutation=None):
+    """Algorithm loop. Mutates until the fitness of child is
+    equal or better than the optimal_fitness"""
+    if custom_mutation is None:
+        def mutation(parent):
+            return _mutate(
+                parent, get_fitness,
+                lambda genes: _mutate_typeA(genes, gene_set))
+    else:
+        def mutation(parent):
+            return _mutate(
+                parent, get_fitness,
+                lambda genes: custom_mutation(genes))
+
+    def init_parent():
+        return _initparent(length, gene_set, get_fitness)
+
+    for count, (improvement, mutations) in enumerate(
+            _evolution(mutation, init_parent)):
+        print(f"Generation {count} Mutations: {mutations}")
+        display(improvement)
+        if not optimal_fitness > improvement.fitness:
+            return improvement
+
+
+class Chromosome:
+    genes = None
+    fitness = None
+
+    def __init__(self, genes, fitness):
+        self.genes = genes
+        self.fitness = fitness
+
+
 class Benchmark:
     @staticmethod
     def run(function):
@@ -23,62 +97,3 @@ class Benchmark:
                     1 + i, mean,
                     statistics.stdev(timings, mean)
                     if i > 1 else 0))
-
-
-class Chromosome:
-    genes = None
-    fitness = None
-
-    def __init__(self, genes, fitness):
-        self.genes = genes
-        self.fitness = fitness
-
-
-def _generate_parent(length, gene_set, get_fitness):
-    """Generates a random guess. The loop is useful if the
-    gene_set length is smaller than the target length."""
-    genes = []
-    while len(genes) < length:
-        sample_size = min(length - len(genes), len(gene_set))
-        genes.extend(random.sample(gene_set, sample_size))
-    fitness = get_fitness(genes)
-    return Chromosome(genes, fitness)
-
-
-def _mutate(parent, gene_set, get_fitness):
-    """Change one letter. Selects two random characters, and
-    a random index. If one of the chars is equal to the
-    elemento at the index, then the other is selected."""
-    index = random.randrange(0, len(parent.genes))
-    # Work with lists and strings
-    child_genes = parent.genes[:]
-    new_gene, alternate = random.sample(gene_set, 2)
-    child_genes[index] = alternate \
-        if new_gene == child_genes[index] \
-        else new_gene
-    fitness = get_fitness(child_genes)
-    return Chromosome(child_genes, fitness)
-
-
-def _get_improvement(target_len, gene_set, get_fitness):
-    best_parent = _generate_parent(target_len, gene_set, get_fitness)
-    yield best_parent
-    while True:
-        child = _mutate(best_parent, gene_set, get_fitness)
-        if not best_parent.fitness > child.fitness:
-            if child.fitness > best_parent.fitness:
-                yield child
-            best_parent = child
-
-
-def get_best(display, get_fitness, target_len,
-             optimal_fitness, gene_set, custom_mutate=None):
-    """Algorithm loop. Mutates until the fitness of child is
-    equal or better than the optimal_fitness"""
-    random.seed()
-    improvements = _get_improvement(target_len, gene_set,
-                                    get_fitness)
-    for improvement in improvements:
-        display(improvement)
-        if not optimal_fitness > improvement.fitness:
-            return improvement

@@ -4,19 +4,19 @@ import genetic
 
 
 class eightQueensTests(unittest.TestCase):
-    def test(self, size=8):
+    def test(self, size=50):
         geneset = [i for i in range(size)]
         start_t = datetime.datetime.now()
         optimal_fitness = Fitness(0)
         best = genetic.get_best(
-            lambda candidate: display(candidate, start_t,
-                                      size),
-            lambda genes: get_fitness(genes, size),
-            size, optimal_fitness, geneset)
+            geneset, size, optimal_fitness,
+            lambda candidate: display(candidate, start_t, size),
+            lambda genes: get_fitness(genes, size))
+
         self.assertTrue(not optimal_fitness > best.fitness)
 
-    def test_benchmark(self):
-        genetic.Benchmark.run(lambda: self.test(20))
+    # def test_benchmark(self):
+    #   genetic.Benchmark.run(lambda: self.test(10))
 
 
 class Fitness:
