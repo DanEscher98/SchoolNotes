@@ -3,20 +3,16 @@ import datetime
 import genetic
 
 
-class eightQueensTests(unittest.TestCase):
-    def test(self, size=50):
-        geneset = [i for i in range(size)]
-        start_t = datetime.datetime.now()
-        optimal_fitness = Fitness(0)
-        best = genetic.get_best(
-            geneset, size, optimal_fitness,
-            lambda candidate: display(candidate, start_t, size),
-            lambda genes: get_fitness(genes, size))
-
-        self.assertTrue(not optimal_fitness > best.fitness)
-
-    # def test_benchmark(self):
-    #   genetic.Benchmark.run(lambda: self.test(10))
+def eightQueens(size):
+    geneset = [i for i in range(size)]
+    start_t = datetime.datetime.now()
+    optimal_fitness = Fitness(0)
+    best = genetic.get_best(
+        geneset, size, optimal_fitness,
+        lambda genes: get_fitness(genes),
+        display=lambda candidate:
+            display(candidate, start_t, size))
+    return best, optimal_fitness
 
 
 class Fitness:
@@ -49,22 +45,18 @@ class Board:
         return self.board[column][row]
 
 
-def get_fitness(genes, size):
-    board = Board(genes, size)
-    rowsWithQueens = set()
-    colsWithQueens = set()
+def get_fitness(genes) -> Fitness:
+    size = len(genes)
+    colsWithQueens = len(genes)
+    rowsWithQueens = len(set(genes))
     northEastDiagonalsWithQueens = set()
     southEastDiagonalsWithQueens = set()
-    for row in range(size):
-        for col in range(size):
-            if board.get(row, col) == 'Q':
-                rowsWithQueens.add(row)
-                colsWithQueens.add(col)
-                northEastDiagonalsWithQueens.add(row + col)
-                southEastDiagonalsWithQueens.add(size - 1 -
-                                                 row + col)
-    total = 4 * size - (len(rowsWithQueens) +
-                        len(colsWithQueens) +
+    for col, row in enumerate(genes):
+        northEastDiagonalsWithQueens.add(row + col)
+        southEastDiagonalsWithQueens.add(
+            size - 1 - row + col)
+    total = 4 * size - (colsWithQueens +
+                        rowsWithQueens +
                         len(northEastDiagonalsWithQueens) +
                         len(southEastDiagonalsWithQueens))
     return Fitness(total)
@@ -80,5 +72,36 @@ def display(candidate, start_t, size):
         str(time_diff)))
 
 
+class eightQueensTests(unittest.TestCase):
+    def test(self, size=50):
+        solution, optimal = eightQueens(size)
+        self.assertTrue(not solution.fitness > optimal)
+
+    # def test_benchmark(self):
+    #   genetic.Benchmark.run(lambda: self.test(10))
+
+
 if __name__ == '__main__':
-    unittest.main()
+    eightQueens(5)
+
+# size=1000 -> Generation 491 Mutations: 2104125
+
+# def get_fitness(genes, size):
+#     board = Board(genes, size)
+#     rowsWithQueens = set()
+#     colsWithQueens = set()
+#     northEastDiagonalsWithQueens = set()
+#     southEastDiagonalsWithQueens = set()
+#     for row in range(size):
+#         for col in range(size):
+#             if board.get(row, col) == 'Q':
+#                 rowsWithQueens.add(row)
+#                 colsWithQueens.add(col)
+#                 northEastDiagonalsWithQueens.add(row + col)
+#                 southEastDiagonalsWithQueens.add(size - 1 -
+#                                                  row + col)
+#     total = 4 * size - (len(rowsWithQueens) +
+#                         len(colsWithQueens) +
+#                         len(northEastDiagonalsWithQueens) +
+#                         len(southEastDiagonalsWithQueens))
+#     return Fitness(total)

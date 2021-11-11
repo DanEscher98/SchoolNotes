@@ -4,7 +4,16 @@ import time
 import sys
 
 
-def _initparent(length, geneset, get_fitness):
+class Chromosome:
+    genes = None
+    fitness = None
+
+    def __init__(self, genes, fitness):
+        self.genes = genes
+        self.fitness = fitness
+
+
+def _initparent(length, geneset, get_fitness) -> Chromosome:
     genes = []
     while len(genes) < length:
         sample_size = min(length - len(genes), len(geneset))
@@ -13,7 +22,7 @@ def _initparent(length, geneset, get_fitness):
     return Chromosome(genes, fitness)
 
 
-def _mutate_typeA(genes, geneset):
+def _mutate_typeA(genes, geneset) -> str:
     index = random.randrange(0, len(genes))
     new_gene, aux_gene = random.sample(geneset, 2)
     genes[index] = aux_gene \
@@ -22,14 +31,14 @@ def _mutate_typeA(genes, geneset):
     return genes
 
 
-def _mutate(parent, get_fitness, mutation_type):
+def _mutate(parent, get_fitness, mutation_type) -> Chromosome:
     genes = parent.genes[:]
     genes = mutation_type(genes)
     fitness = get_fitness(genes)
     return Chromosome(genes, fitness)
 
 
-def _evolution(mutate, init_parent):
+def _evolution(mutate, init_parent) -> iter(str, int):
     count = 0
     parent = init_parent()
     yield (parent, count)
@@ -44,16 +53,16 @@ def _evolution(mutate, init_parent):
 
 
 def get_best(gene_set, length, optimal_fitness,
-             display, get_fitness, custom_mutation=None):
+             get_fitness, display=None, custom_mutation=None):
     """Algorithm loop. Mutates until the fitness of child is
     equal or better than the optimal_fitness"""
     if custom_mutation is None:
-        def mutation(parent):
+        def mutate(parent):
             return _mutate(
                 parent, get_fitness,
                 lambda genes: _mutate_typeA(genes, gene_set))
     else:
-        def mutation(parent):
+        def mutate(parent):
             return _mutate(
                 parent, get_fitness,
                 lambda genes: custom_mutation(genes))
@@ -61,21 +70,13 @@ def get_best(gene_set, length, optimal_fitness,
     def init_parent():
         return _initparent(length, gene_set, get_fitness)
 
-    for count, (improvement, mutations) in enumerate(
-            _evolution(mutation, init_parent)):
+    for count, (generation, mutations) in enumerate(
+            _evolution(mutate, init_parent)):
         print(f"Generation {count} Mutations: {mutations}")
-        display(improvement)
-        if not optimal_fitness > improvement.fitness:
-            return improvement
-
-
-class Chromosome:
-    genes = None
-    fitness = None
-
-    def __init__(self, genes, fitness):
-        self.genes = genes
-        self.fitness = fitness
+        if display is not None:
+            display(generation)
+        if not optimal_fitness > generation.fitness:
+            return generation
 
 
 class Benchmark:
