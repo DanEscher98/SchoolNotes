@@ -52,10 +52,12 @@ def _evolution(mutate, init_parent) -> iter(str, int):
             parent = child
 
 
-def get_best(gene_set, length, optimal_fitness,
-             get_fitness, display=None, custom_mutation=None):
+def get_best(gene_set, length, optimal_fitness, get_fitness,
+             display=None, custom_mutation=None,
+             custom_create=None):
     """Algorithm loop. Mutates until the fitness of child is
     equal or better than the optimal_fitness"""
+    # Initialize Functions
     if custom_mutation is None:
         def mutate(parent):
             return _mutate(
@@ -67,9 +69,15 @@ def get_best(gene_set, length, optimal_fitness,
                 parent, get_fitness,
                 lambda genes: custom_mutation(genes))
 
-    def init_parent():
-        return _initparent(length, gene_set, get_fitness)
+    if custom_create is None:
+        def init_parent():
+            return _initparent(length, gene_set, get_fitness)
+    else:
+        def init_parent():
+            genes = custom_create()
+            return Chromosome(genes, get_fitness(genes))
 
+    # The Mutation-Selection Loop
     for count, (generation, mutations) in enumerate(
             _evolution(mutate, init_parent)):
         print(f"Generation {count} Mutations: {mutations}")

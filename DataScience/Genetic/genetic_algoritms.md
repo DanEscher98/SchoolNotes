@@ -3,11 +3,14 @@ author: Daniel Colin
 title: Genetic Algorithms
 ---
 
-## Fitness Techniques
+## Fitness and Mutation Techniques
 
 - Give partial credit in the fitness if possible
 - The fitness function should return as fast as possible because we're
     going to call it potentially millions of times.
+- Memetic Algorithms are capable of solving a wider range of problems
+    than random-population-based *Genetic Algorithms* because they
+    accelerate the search.
 
 ## Glossary
 
