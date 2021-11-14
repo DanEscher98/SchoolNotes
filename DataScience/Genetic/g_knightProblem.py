@@ -1,5 +1,5 @@
 import unittest
-import datetime
+from datetime import datetime
 import random
 import string
 from math import ceil, log, sqrt
@@ -14,6 +14,9 @@ class Position:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    def toTuple(self):
+        return (self.x, self.y)
 
     def __str__(self):
         return f"({self.x}, {self.y})"
@@ -73,8 +76,7 @@ def get_attacks(location, boardSize) -> Set[Position]:
     for (x, y) in moves:
         if 0 <= x + location.x < boardSize.x:
             if 0 <= y + location.y < boardSize.y:
-                attacks.add(Position(
-                    x + location.x, y + location.y))
+                attacks.add(Position(x + location.x, y + location.y))
     return attacks
 
 
@@ -85,7 +87,7 @@ def get_fitness(genes, boardSize) -> int:
 
 
 def display(candidate, start_t, boardSize):
-    time_diff = datetime.datetime.now() - start_t
+    time_diff = datetime.now() - start_t
     board = Board(candidate.genes, boardSize)
     board.print()
     print("\t{}\t{}\n".format(
@@ -111,8 +113,47 @@ def mutate(genes, get_randomPos, boardSize,
     # local maximum.
     while count > 0:
         count -= 1
-        index = random.randrange(0, len(genes))
-        genes[index] = Knight(get_randomPos(), boardSize)
+        # Determine which knights attack which squares
+        positionToKnightIndexes = dict((p, [])
+                                       for p in allPositions)
+        for i, knight in enumerate(genes):
+            for position in knight.attacks:
+                positionToKnightIndexes[position].append(i)
+
+        # Get a list of indexes of knights whose attacks are
+        # all covered by some other knight and build a list
+        # of the squares that are no under attack
+        knightIndexes = set(i for i in range(len(genes)))
+        unattacked = []
+        for kvp in positionToKnightIndexes.items():
+            if len(kvp[1]) > 1:
+                continue
+            if len(kvp[1]) == 0:
+                unattacked.append(kvp[0])
+                continue
+            for p in kvp[1]:
+                if p in knightIndexes:
+                    knightIndexes.remove(p)
+
+        # Get list of locations from which the unattacked
+        # squares can be attacked. More duplicates makes
+        # them more likely to be selected.
+        potentialKnightPositions = \
+            [p for positions in
+             map(lambda x: get_attacks(x, boardSize),
+                 unattacked)
+             for p in positions if p in nonEdgePositions] \
+            if len(unattacked) > 0 else nonEdgePositions
+
+        # Then we choose a knight to replace.
+        geneIndex = random.randrange(0, len(genes)) \
+            if len(knightIndexes) == 0 \
+            else random.choice([i for i in knightIndexes])
+
+        # We replace the knight to try to improve the fitness
+        position = random.choice(potentialKnightPositions)
+        genes[geneIndex] = Knight(
+            position, boardSize)
     return genes
 
 
@@ -140,7 +181,7 @@ def knightPositions(boardSize):
     def get_randomPos():
         return Position(random.randrange(low_limit, x_limit),
                         random.randrange(low_limit, y_limit))
-    start_t = datetime.datetime.now()
+    start_t = datetime.now()
     optimal_fitness = boardSize.x * boardSize.y
     numOfKnights = get_NumKnigths(boardSize)
 
@@ -163,7 +204,7 @@ def knightPositions(boardSize):
 
 class KnightsTest(unittest.TestCase):
     def test_3x4(self):
-        boardSize = Position(100, 100)
+        boardSize = Position(40, 40)
         optimal_fitness = boardSize.x * boardSize.y
         best = knightPositions(boardSize)
         self.assertTrue(not optimal_fitness > best.fitness)

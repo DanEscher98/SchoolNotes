@@ -9,3 +9,4 @@
     - Allow add a gene if mutations are greater than standard
         deviation.
     - Add conditional to give up at upper bound of genes allowed
+    - Optimize `mutation()`
