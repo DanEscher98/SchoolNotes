@@ -1,16 +1,36 @@
 import random
 import statistics
+from typing import Iterator
 import time
 import sys
+from bisect import bisect_left
+from math import exp
 
 
 class Chromosome:
-    genes = None
-    fitness = None
-
-    def __init__(self, genes, fitness):
+    def __init__(self, genes, fitness, mutations):
         self.genes = genes
         self.fitness = fitness
+        self.mutations = mutations
+        self.age = 0
+
+    def reset(self):
+        self.mutations = 0
+
+
+class Results:
+    def __init__(self, chromosome):
+        self.best_chromosome = chromosome
+        self.age_series = []
+
+    def one_mut(self):
+        self.mutations += 1
+
+    def reset(self):
+        self.mutations = 0
+
+    def new_best(self, chromosome):
+        self.best_chromosome = chromosome
 
 
 def _initparent(length, geneset, get_fitness) -> Chromosome:
@@ -19,7 +39,7 @@ def _initparent(length, geneset, get_fitness) -> Chromosome:
         sample_size = min(length - len(genes), len(geneset))
         genes.extend(random.sample(geneset, sample_size))
     fitness = get_fitness(genes)
-    return Chromosome(genes, fitness)
+    return Chromosome(genes, fitness, 0)
 
 
 def _mutate_typeA(genes, geneset) -> str:
@@ -35,26 +55,53 @@ def _mutate(parent, get_fitness, mutation_type) -> Chromosome:
     genes = parent.genes[:]
     genes = mutation_type(genes)
     fitness = get_fitness(genes)
-    return Chromosome(genes, fitness)
+    return Chromosome(genes, fitness, parent.mutations + 1)
 
 
-def _evolution(mutate, init_parent) -> iter(str, int):
-    count = 0
-    parent = init_parent()
-    yield (parent, count)
+def _evolution(mutate, init_parent, max_age) -> Iterator[Chromosome]:
+    parent = bestParent = init_parent()
+    # result = Results(parent)
+    yield parent
+    historicalFitnesses = [bestParent.fitness]
     while True:
         child = mutate(parent)
-        count += 1
-        if not parent.fitness > child.fitness:
-            if child.fitness > parent.fitness:
-                yield (child, count)
-                count = 0
-            parent = child
+        if parent.fitness > child.fitness:
+            if max_age is not None:
+                # One more time, the parent has better fitness
+                parent.age += 1                 # Aging
+                if not max_age > parent.age:    # parent.age >= max_age
+                    index = bisect_left(        # insert in order
+                        historicalFitnesses, child.fitness, 0,
+                        len(historicalFitnesses))
+                    proportionSimilar = 1 - index / len(historicalFitnesses)
+                    # The lineage dies or steps backwards
+                    if random.random() >= exp(-proportionSimilar):
+                        parent = bestParent     # Worst case (reset)
+                        parent.age = 0
+                        # print("Worst case")
+                    else:
+                        parent = child          # Bad case (backwards)
+                        # print("Set backwards")
+        elif not child.fitness > parent.fitness:
+            # same fitness
+            child.age = parent.age + 1          # Aging
+            parent = child                      # Neutral case
+            # print("Neutral case")
+        else:
+            # The child's fitness is greater than that of the parent
+            parent = child                      # Best local
+            parent.age = 0                      # Fresh progress
+            if child.fitness > bestParent.fitness:
+                yield child
+                child.reset()
+                bestParent = child              # Happy ending
+                # print("Happy ending")
+                historicalFitnesses.append(child.fitness)
 
 
 def get_best(gene_set, length, optimal_fitness, get_fitness,
              display=None, custom_mutation=None,
-             custom_create=None):
+             custom_create=None, max_age=None):
     """Algorithm loop. Mutates until the fitness of child is
     equal or better than the optimal_fitness"""
     # Initialize Functions
@@ -75,12 +122,13 @@ def get_best(gene_set, length, optimal_fitness, get_fitness,
     else:
         def init_parent():
             genes = custom_create()
-            return Chromosome(genes, get_fitness(genes))
+            return Chromosome(genes, get_fitness(genes), 0)
 
     # The Mutation-Selection Loop
-    for count, (generation, mutations) in enumerate(
-            _evolution(mutate, init_parent)):
-        print(f"Generation {count} Mutations: {mutations}")
+    for count, generation in enumerate(
+            _evolution(mutate, init_parent, max_age)):
+        print("Generation {} Mutations: {}".format(
+            count, generation.mutations))
         if display is not None:
             display(generation)
         if not optimal_fitness > generation.fitness:

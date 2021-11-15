@@ -45,4 +45,23 @@ while optimal_fitness > fitness(parent):
         parent = child
 ```
 
+## Simulated Annealing
 
+Simulated annealing (SA) is a probabilistic technique for
+approximating the global optimum of a given function. Specifically, it
+is a metaheuristic to approximate global optimization in a large
+search space for an optimization problem. It is often used when the
+search space is discrete (for example the traveling salesman problem,
+the boolean satisfiability problem, protein structure prediction, and
+job-shop scheduling). For problems where finding an approximate global
+optimum is more important than finding a precise local optimum in a
+fixed amount of time, simulated annealing may be preferable to exact
+algorithms such as gradient descent or branch and bound. 
+
+A metaheuristic is a higher-level procedure or heuristic designed to
+find, generate, or select a heuristic (partial search algorithm) that
+may provide a sufficiently good solution to an optimization problem,
+especially with incomplete or imperfect information or limited
+computation capacity. Metaheuristics sample a subset of
+solutions which is otherwise too large to be completely enumerated or
+otherwise explored.

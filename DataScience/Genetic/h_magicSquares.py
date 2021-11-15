@@ -49,7 +49,7 @@ def mutation(genes):
     return genes
 
 
-def magicSquares(size):
+def magicSquares(size, max_age):
     geneset = [i+1 for i in range(size**2)]
     expectedSum = size * (size**2 + 1) / 2
     optimal_fitness = 2 * (1 + size)
@@ -62,13 +62,14 @@ def magicSquares(size):
             display(candidate, size, start_t),
         custom_mutation=lambda genes: mutation(genes),
         custom_create=lambda:
-            random.sample(geneset, len(geneset)))
+            random.sample(geneset, len(geneset)),
+        max_age=max_age)
     return best, optimal_fitness
 
 
 class magicSquaresTest(unittest.TestCase):
     def test(self):
-        best, optimal_fitness = magicSquares(100)
+        best, optimal_fitness = magicSquares(5, 500)
         self.assertTrue(not optimal_fitness > best.fitness)
 
 
