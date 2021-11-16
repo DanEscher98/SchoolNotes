@@ -179,5 +179,50 @@ class KnapsackTests(unittest.TestCase):
         self.assertTrue(not optimal > best.fitness)
 
 
+# Read a format
+
+class KnapsackData:
+    def __init__(self):
+        self.resources = []
+        self.maxWeight = 0
+        self.Solution = []
+
+
+def read_resource_or_find_data_end(line, data):
+    if line == "end data":
+        return find_data_start
+    parts = line.split('\t')
+    resource = Resource("R" + str(1 + len(data.resources)),
+                        int(parts[1]), int(parts[0]), 0)
+    data.resources.append(resource)
+    return read_resource_or_find_data_end
+
+
+def find_data_start(line, data):
+    if line != "begin data":
+        return find_data_start
+    return read_resource_or_find_data_end
+
+
+def find_constraint(line, data):
+    parts = line.split(' ')
+    if parts[0] != "c:":
+        return find_constraint
+    data.maxWeight = int(parts[1])
+    return find_data_start
+
+
+def load_data(local_filename):
+    with open(local_filename, mode='r') as file:
+        lines = file.read().splitlines()
+    data = KnapsackData()
+    f = find_constraint
+    for line in lines:
+        f = f(line.strip(), data)
+        if f is None:
+            break
+    return data
+
+
 if __name__ == '__main__':
     unittest.main()

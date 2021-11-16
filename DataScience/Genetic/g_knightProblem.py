@@ -204,7 +204,7 @@ def knightPositions(boardSize):
 
 class KnightsTest(unittest.TestCase):
     def test_3x4(self):
-        boardSize = Position(40, 40)
+        boardSize = Position(16, 16)
         optimal_fitness = boardSize.x * boardSize.y
         best = knightPositions(boardSize)
         self.assertTrue(not optimal_fitness > best.fitness)
