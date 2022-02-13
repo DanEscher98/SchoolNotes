@@ -61,7 +61,7 @@ title: CCNA Exam v1.0 (200-301)
     - Frame flooding
     - MAC address table
 
---
+---
 
 ## II) 20% Network Access
 
@@ -99,7 +99,7 @@ title: CCNA Exam v1.0 (200-301)
     for client connectivity using GUI only such as WLAN creation,
     security settings, QoS profiles, and advanced WLAN settings
 
---
+---
 
 ## III) 25% IP Connectivity
 
@@ -131,7 +131,7 @@ title: CCNA Exam v1.0 (200-301)
 
 5. `[·]` Describe the purpose of first hop redundancy protocol
 
---
+---
 
 ## IV) 10% IP Services
 
@@ -146,7 +146,7 @@ title: CCNA Exam v1.0 (200-301)
 8. `[·]` Configure network devices for remote access using SSH
 9. `[·]` Describe the capabilities and function of TFTP/FTP in the network
 
---
+---
 
 ## V) 15% Security Fundamentals
 
@@ -166,7 +166,7 @@ title: CCNA Exam v1.0 (200-301)
 9. `[·]` Describe wireless security protocols (WPA, WPA2, and WPA3)
 10. `[·]` Configure WLAN using WPA2 PSK using the GUI
 
---
+---
 
 ## VI) 10% Automation and Programmability
 
