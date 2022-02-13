@@ -1,6 +1,8 @@
-# CCNA Exam v1.0 (200-301)
+---
+title: CCNA Exam v1.0 (200-301)
+---
 
-## I) $20%$ Network Fundamentals
+## I) 20% Network Fundamentals
 
 1. `[·]` Explain the role and function of network components
     -  Routers
@@ -61,7 +63,7 @@
 
 --
 
-## II) $20%$ Network Access
+## II) 20% Network Access
 
 1. `[·]` Configure and verify VLANs (normal range) spanning
     multiple switches
@@ -99,7 +101,7 @@
 
 --
 
-## III) $25%$ IP Connectivity
+## III) 25% IP Connectivity
 
 1. `[·]` Interpret the components of routing table
     - Routing protocol code
@@ -131,7 +133,7 @@
 
 --
 
-## IV) $10%$ IP Services
+## IV) 10% IP Services
 
 1. `[·]` Configure and verify NTP operating in a client and server mode
 2. `[·]` Explain the role of DHCP and DNS within the network
@@ -146,7 +148,7 @@
 
 --
 
-## V) $15%$ Security Fundamentals
+## V) 15% Security Fundamentals
 
 1. `[·]` Define key security concepts (threats, vulnerabilities,
     exploits, and mitigation techniques)
@@ -166,7 +168,7 @@
 
 --
 
-## VI) $10%$ Automation and Programmability
+## VI) 10% Automation and Programmability
 
 1. `[·]` Explain how automation impacts network management
 2. `[·]` Compare traditional networks with controller-based networking
@@ -181,8 +183,11 @@
 6. `[·]` Recognize the capabilities of configuration management mechanisms
     Puppet, Chef, and Ansible
 7. `[·]` Interpret JSON encoded data
-la capa OSI, capa TCP/IP
 
+
+## Notes
+
+la capa OSI, capa TCP/IP
 protocolos de switching 
 las VLANs, 
 el Spanning-Tree Protocol,

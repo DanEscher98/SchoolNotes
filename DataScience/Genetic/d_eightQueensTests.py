@@ -18,16 +18,16 @@ class Fitness:
 
 class Board:
     def __init__(self, genes, size):
-        board = [['·'] * size for _ in range(size)]
+        board = [["·"] * size for _ in range(size)]
         for column in range(0, len(genes)):
             row = genes[column]
-            board[row][column] = '♛'
+            board[row][column] = "♛"
         self.board = board
 
     def print(self):
         # 0,0 prints in bottom left corner
         for i in reversed(range(0, len(self.board))):
-            print('  '.join(self.board[i]))
+            print("  ".join(self.board[i]))
 
     def get(self, row, column):
         return self.board[column][row]
@@ -41,12 +41,13 @@ def get_fitness(genes) -> Fitness:
     southEastDiagonalsWithQueens = set()
     for col, row in enumerate(genes):
         northEastDiagonalsWithQueens.add(row + col)
-        southEastDiagonalsWithQueens.add(
-            size - 1 - row + col)
-    total = 4 * size - (colsWithQueens +
-                        rowsWithQueens +
-                        len(northEastDiagonalsWithQueens) +
-                        len(southEastDiagonalsWithQueens))
+        southEastDiagonalsWithQueens.add(size - 1 - row + col)
+    total = 4 * size - (
+        colsWithQueens
+        + rowsWithQueens
+        + len(northEastDiagonalsWithQueens)
+        + len(southEastDiagonalsWithQueens)
+    )
     return Fitness(total)
 
 
@@ -54,10 +55,13 @@ def display(candidate, start_t, size):
     time_diff = datetime.datetime.now() - start_t
     board = Board(candidate.genes, size)
     board.print()
-    print("{0}\t=> {1}\t{2}\n".format(
-        '  '.join(map(lambda n: str(n+1), candidate.genes)),
-        candidate.fitness,
-        str(time_diff)))
+    print(
+        "{0}\t=> {1}\t{2}\n".format(
+            "  ".join(map(lambda n: str(n + 1), candidate.genes)),
+            candidate.fitness,
+            str(time_diff),
+        )
+    )
 
 
 def eightQueens(size):
@@ -65,10 +69,12 @@ def eightQueens(size):
     start_t = datetime.datetime.now()
     optimal_fitness = Fitness(0)
     best = genetic.get_best(
-        geneset, size, optimal_fitness,
+        geneset,
+        size,
+        optimal_fitness,
         lambda genes: get_fitness(genes),
-        display=lambda candidate:
-            display(candidate, start_t, size))
+        display=lambda candidate: display(candidate, start_t, size),
+    )
     return best, optimal_fitness
 
 
@@ -81,8 +87,8 @@ class eightQueensTests(unittest.TestCase):
     #   genetic.Benchmark.run(lambda: self.test(10))
 
 
-if __name__ == '__main__':
-    eightQueens(120)
+if __name__ == "__main__":
+    eightQueens(16)
 
 # size=1000 -> Generation 491 Mutations: 2104125
 
