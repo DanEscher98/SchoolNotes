@@ -1,5 +1,9 @@
 ---
 title: CCNA Exam v1.0 (200-301)
+link-citations: true
+linkReference: true
+colorlinks: true
+nameInLink: true
 ---
 
 ## Study Materials

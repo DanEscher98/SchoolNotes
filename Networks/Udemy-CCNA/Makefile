@@ -1,4 +1,4 @@
-TARGET = temarioCCNA
+TARGET = README
 
 pdf: $(TARGET).md
 	pandoc $(TARGET).md -o $(TARGET).pdf --standalone --toc
