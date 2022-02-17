@@ -74,35 +74,46 @@
 ```
 
 #### Encrypt passwords
-> \# configure terminal
-> (config)\# service password-encryption
+```
+# configure terminal
+(config)# service password-encryption
+```
 
 #### Configuration in the current session
-> \# show running-config
+```
+# show running-config
+```
 
 #### Banner messages
-> \# configure terminal
-> (config)\# banner motd \#\<message>\#
+```
+# configure terminal
+(config)# banner motd #<message>
+#
+```
 
 ---
 
 ## **2.5** Save Configurations
 
 #### Save configurations
-> \# copy running-config startup-config
-
+```
+# copy running-config startup-config
+```
 ---
 
 ## **2.7** Configure IP Addressing
 
 #### Configure IP address
-> \# configure terminal
-> (config)\# interface vlan 1
-> (config-if)\# ip address \<IP Address> \<subnet mask>
-> (config-if)\# no shutdown
-> (config-if)\# exit
+```
+# configure terminal
+(config)# interface vlan 1
+(config-if)# ip address <IP Address> <subnet mask>
+(config-if)# no shutdown
+(config-if)# exit
+```
 
 #### Show IP configuration
-> \# show ip interface brief
-
+```
+# show ip interface brief
+```
 ---
