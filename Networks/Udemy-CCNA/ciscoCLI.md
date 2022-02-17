@@ -34,35 +34,44 @@
 ## **2.4** Basic Device Configuration
 
 #### Set a name
-> \# configure terminal
-> (config)\# hostname \<name>
-> \<name>\#
+```
+# configure terminal
+(config)# hostname <name>
+<name>#
+```
 
 #### User EXEC password
-> \# configure terminal
-> (config)\# line console 0
-> (config-line)\# password \<password>
-> (config-line)\# login
-> (config-line)\# end
-> \#
+```
+# configure terminal
+(config)# line console 0
+(config-line)# password <password>
+(config-line)# login
+(config-line)# end
+#
+```
 
 #### Priviliged EXEC password
-> \# configure terminal
-> (config)\# enable password \<password>
-> (config)\# exit
-
+```
+# configure terminal
+(config)# enable password <password>
+(config)# exit
+```
 
 #### Priviliged EXEC password with encryption
-> \# configure terminal
-> (config)\# enable secret \<password>
-> (config)\# exit
+```
+# configure terminal
+(config)# enable secret <password>
+(config)# exit
+```
 
 #### Secure VTY lines
-> \# configure terminal
-> (config)\# line vty 0 15
-> (config-line)\# password \<password>
-> (config-line)\# login
-> (config-line)\# end
+```
+# configure terminal
+(config)# line vty 0 15
+(config-line)# password <password>
+(config-line)# login
+(config-line)# end
+```
 
 #### Encrypt passwords
 > \# configure terminal
