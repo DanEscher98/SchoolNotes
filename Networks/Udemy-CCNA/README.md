@@ -1,6 +1,18 @@
 ---
 title: CCNA Exam v1.0 (200-301)
+link-citations: true
+linkReference: true
+colorlinks: true
+nameInLink: true
 ---
+
+## Study Materials
+
+- [Udemy CCNA](https://www.udemy.com/share/1013g83@cLpG7wj5K-xFy9LMT0f2udHXlFhvljXHXmmOctlKWAzkLBn9YdjSSUxMrCfucPr5/)
+- [NetworkLessons](https://networklessons.com/cisco/ccna-200-301)
+- [Drive for Books](https://drive.google.com/drive/folders/1QEmiYA1t4VcxLjQTdpHvWIBzqxLWunoj?usp=sharing)
+
+## Exam Topics
 
 ## I) 20% Network Fundamentals
 
@@ -198,3 +210,6 @@ temario de routing:
 protocolos de enrutamiento estático,
 protocolos de enrutamiento dinámico: OSPF, RIP, EIGRP
 protocolos de redundancia de routers a nivel L3: HSRP, VRRP, GLBP
+
+> Soy un waffle.
+> Y yo un Ruffle.
