@@ -30,8 +30,32 @@
     and the port number.
 - Defines services to segment, transfer and reassemble the data for
     individual communications between the end devices.
+- Is responsible for end-to-end error recovery and flow control.
 - It breaks down large files into smaller segments that are less
     likely to incur transmission problems.
+- Session multiplexing is the process by which a host is able to
+    support multiple sessions simultaneously and manage the individual
+    traffic streams over a single link. 
+- The L4 *destination port number* is used to identify the upper layer
+    protocol. The sender also adds a *source port* number to the L4
+    header. The combination of both numbers can be used to track
+    sessions.
+- `TCP` and `UDP` are the most common L4 protocols.
+    - `TCP` is connection oriented, once a connection is established,
+        data can be sent bidirectionally over that connection.
+    - `TCP` carries out sequencing to ensure segments are processed in
+        the correct order and none are missing.
+    - `TCP` is reliable, the receiving host sends acknowledgments back
+        to the sender. Lost segments are resent.
+    - `TCP` performs flow control.
+    - `UDP` is basically the opposite of `TCP`. If error detection and
+        recovery is required it is up to the upper layers to provide
+        it.
+    - Application developers will typically choose to use `TCP` for
+        traffic which requires reliability. Real-Time applications
+        such as voice and video, can't afford the extra overhead of
+        `TCP` so they use `UDP`. Some applications can use both
+        protocols.
 
 ## L3 - The Network Layer
 

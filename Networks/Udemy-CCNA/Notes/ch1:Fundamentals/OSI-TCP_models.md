@@ -39,6 +39,23 @@ las capas de conexión. Se divide en 7 capas:
 | 6 | Data         | Net access  | Frame   | `Eth MAC addr` | Switches |
 | 7 | Physical     |             |         |                | Hubs     |
 
+### Important Ports
+
+#### TCP applications
+- `FTP`: 21
+- `SSH`: 22
+- `Telnet`: 23
+- `HTTP`: 80
+- `HTTPS`: 443
+
+#### UDP applications
+- `TFTP`: 69
+- `SNMP`: 161
+
+#### TCP and UDP applications
+- `DNS`: 53
+- `SMTP` email: 25
+
 ### Cisco TCP/IP Stack Layer Definition
 
 - Application: Represents data users, encodes and controls the dialog.
