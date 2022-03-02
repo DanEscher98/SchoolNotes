@@ -27,6 +27,28 @@ las capas de conexión. Se divide en 7 capas:
     esta capa se realiza la transimición de bits (O'S y 1's).
 
 
+## Comparison between OSI and TCP
+
+| N | OSI Layer    | TCP Stack   | PDU     | Topics         | Devices  |
+| - | :----------- | :---------- | :------ | :------------- | :------- |
+| 1 | Application  | Application | Data    | | |
+| 2 | Presentation | | | |
+| 3 | Session      | | | |
+| 4 | Transport    | Transport   | Segment | `TCP/UDP port` | |
+| 5 | Network      | Internet    | Packet  | `IP Address`   | Routers  |
+| 6 | Data         | Net access  | Frame   | `Eth MAC addr` | Switches |
+| 7 | Physical     |             |         |                | Hubs     |
+
+### Cisco TCP/IP Stack Layer Definition
+
+- Application: Represents data users, encodes and controls the dialog.
+- Transport: Supports communication between end devices across a
+    diverse network.
+- Provides logical addressing and determines the best path through the
+    network.
+- Controls the hardware devices and media that make up the network.
+
+
 Las capas 7, 6 y 5 se les denomina "capas superiores" y son
 especialmente importantes para los desarrolladores, mientras que las
 capas 4 a 1 se les llama "capas inferiores" y son sumamente
@@ -39,7 +61,7 @@ más delante.
 
 (Physical, Data, Network, Transport, Session, Presentation, Application)
 
-- Please Do Not Throw Sausage Pizza Away
 - Please Don't Need Those Stupid Packets Anyway
+- Please Do Not Throw Sausage Pizza Away
 - Please Do Not Teach Stupid Pointless Acronyms
 - Please Do Not Take Sales People's Advice
