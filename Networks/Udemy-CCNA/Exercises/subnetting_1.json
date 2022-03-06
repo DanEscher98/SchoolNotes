@@ -9,10 +9,10 @@
       "Answers": {
         "IP class": "C",
         "Default subnet mask": "255.255.255.0",
-        "Newest subnet mask": "",
-        "Final subnets": "",
-        "Final hosts": "",
-        "Bits from hosts": "",
+        "Newest subnet mask": "255.255.255.224",
+        "Final subnets": "8",
+        "Final hosts": "134217726",
+        "Bits from hosts": "3",
         "IP range": ""
       }
     }

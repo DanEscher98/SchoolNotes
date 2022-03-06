@@ -57,3 +57,42 @@ matches their needs and does not waste addresses
 - Early routing protocols only supported *Fixed Length Subnet Masking*
     (FLSF). You couldn't have have subnets with different size in the
     same network. All modern routing protocols support *Variable LSM*.
+
+---
+
+## Subnetting Considerations
+
+- How many locations do we have in the network?
+- How many hosts are in each location?
+- What are the IP addressing requirements for each location? (Should
+    different departments or types of host be in different subnets?)
+- What size is appropriate for each subnet? (Don't waste addresses,
+    but leave room for growth)
+- The routers need a IP address too.
+- The router loopback interfaces also need allocated address space
+
+## Subnetting Design Steps
+
+1. Find the largest segment and allocate a suitable subnet size
+2. Allocate this subnet at the start of the address space
+3. You will likely allocate spare subnets for future growth and leave
+   space in the subnets for additional hosts
+
+## Private Addresses
+
+- The *Internet Engineering Task Force* (IETF) documents standards
+    with *RFC* (Requests For Comments). RFC 1918 specifies private IP
+    addresses ranges which are not routable on the public internet.
+- Theses addresses were originally designed for hosts which should
+    have no internet connectivity. Public IP addresses cost money. So,
+    if an organisation has a part of their network where the hosts
+    need to communicate with each other over IP, but don't require
+    connectivity to the Internet, they can assign private IP addresses
+    an save money.
+
+## Extra Resources
+
+- [Subnetting Questions](http://www.subnettingquestions.com)
+- [Subnetting Practice](https://subnettingpractice.com)
+- [Subnetting](http://www.subnetting.org)
+- [Calculator](https://www.subnet-calculator.com)
