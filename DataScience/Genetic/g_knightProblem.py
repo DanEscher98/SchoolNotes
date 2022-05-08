@@ -1,14 +1,16 @@
-import unittest
-from datetime import datetime
 import random
 import string
+import unittest
+from datetime import datetime
 from math import ceil, log, sqrt
 from typing import List, Set
-import genetic
 
+import genetic
+from termcolor import colored
 
 # ###############################################
 # PROBLEM DEFINITION ############################
+
 
 class Position:
     def __init__(self, x, y):
@@ -38,9 +40,9 @@ class Board:
     def __init__(self, positions, size):
         # size.x = 4 if size.x < 4 else size.x
         # size.y = 4 if size.x < 4 else size.y
-        board = [['·'] * size.x for _ in range(size.y)]
+        board = [["·"] * size.x for _ in range(size.y)]
         for knight in positions:
-            board[knight.y][knight.x] = '♞'
+            board[knight.y][knight.x] = colored("♞", "green")
         self.board = board
         self.width = size.x
         self.height = size.y
@@ -48,31 +50,31 @@ class Board:
     def print(self):
         # 0,0 prints in bottom left corner
         for i in reversed(range(self.height)):
-            print("{:4d} {}".format(
-                i+1, '  '.join(self.board[i])))
+            print("{:4d} {}".format(i + 1, "  ".join(self.board[i])))
         if self.width < 27:
-            x_labels = list(map(chr, range(65, 65+self.width)))
+            x_labels = list(map(chr, range(65, 65 + self.width)))
         else:
-            x_labels = list(string.ascii_uppercase) + \
-                list(map(str, list(range(27, self.width))))
-        print("     {}".format('  '.join(x_labels)))
+            x_labels = list(string.ascii_uppercase) + list(
+                map(str, list(range(27, self.width)))
+            )
+        print("     {}".format("  ".join(x_labels)))
 
 
 #################################################
 # GENETIC ALGORITHM FUNCTIONS ###################
 
+
 def get_NumKnigths(boardSize) -> int:
     width = boardSize.x
     height = boardSize.y
-    n = ceil(sqrt(width*height))
-    factor = 3/5  # Theorethically, 1/2 should work
+    n = ceil(sqrt(width * height))
+    factor = 3 / 5  # Theorethically, 1/2 should work
     return ceil(factor * n**2 / log(n))
 
 
 def get_attacks(location, boardSize) -> Set[Position]:
     attacks = set()
-    moves = [(-1, -2), (-2, -1), (-2, 1), (-1, 2),
-             (1, 2), (2, 1), (2, -1), (1, -2)]
+    moves = [(-1, -2), (-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2)]
     for (x, y) in moves:
         if 0 <= x + location.x < boardSize.x:
             if 0 <= y + location.y < boardSize.y:
@@ -81,8 +83,7 @@ def get_attacks(location, boardSize) -> Set[Position]:
 
 
 def get_fitness(genes, boardSize) -> int:
-    attacked = set(pos for knight in genes
-                   for pos in knight.attacks)
+    attacked = set(pos for knight in genes for pos in knight.attacks)
     return len(attacked)
 
 
@@ -90,9 +91,13 @@ def display(candidate, start_t, boardSize):
     time_diff = datetime.now() - start_t
     board = Board(candidate.genes, boardSize)
     board.print()
-    print("\t{}\t{}\n".format(
-        # ', '.join(map(str, candidate.genes)),
-        candidate.fitness, str(time_diff)))
+    print(
+        "\t{}\t{}\n".format(
+            # ', '.join(map(str, candidate.genes)),
+            candidate.fitness,
+            str(time_diff),
+        )
+    )
 
 
 def create(expectedKights, get_randomPos, boardSize) -> List[Knight]:
@@ -102,8 +107,9 @@ def create(expectedKights, get_randomPos, boardSize) -> List[Knight]:
     return list(genes)
 
 
-def mutate(genes, get_randomPos, boardSize,
-           allPositions, nonEdgePositions) -> List[Knight]:
+def mutate(
+    genes, get_randomPos, boardSize, allPositions, nonEdgePositions
+) -> List[Knight]:
     # Local minimum: when it ends with a knight
     # configuration where moving any knight results in a
     # worse fitness.
@@ -114,8 +120,7 @@ def mutate(genes, get_randomPos, boardSize,
     while count > 0:
         count -= 1
         # Determine which knights attack which squares
-        positionToKnightIndexes = dict((p, [])
-                                       for p in allPositions)
+        positionToKnightIndexes = dict((p, []) for p in allPositions)
         for i, knight in enumerate(genes):
             for position in knight.attacks:
                 positionToKnightIndexes[position].append(i)
@@ -138,22 +143,27 @@ def mutate(genes, get_randomPos, boardSize,
         # Get list of locations from which the unattacked
         # squares can be attacked. More duplicates makes
         # them more likely to be selected.
-        potentialKnightPositions = \
-            [p for positions in
-             map(lambda x: get_attacks(x, boardSize),
-                 unattacked)
-             for p in positions if p in nonEdgePositions] \
-            if len(unattacked) > 0 else nonEdgePositions
+        potentialKnightPositions = (
+            [
+                p
+                for positions in map(lambda x: get_attacks(x, boardSize), unattacked)
+                for p in positions
+                if p in nonEdgePositions
+            ]
+            if len(unattacked) > 0
+            else nonEdgePositions
+        )
 
         # Then we choose a knight to replace.
-        geneIndex = random.randrange(0, len(genes)) \
-            if len(knightIndexes) == 0 \
+        geneIndex = (
+            random.randrange(0, len(genes))
+            if len(knightIndexes) == 0
             else random.choice([i for i in knightIndexes])
+        )
 
         # We replace the knight to try to improve the fitness
         position = random.choice(potentialKnightPositions)
-        genes[geneIndex] = Knight(
-            position, boardSize)
+        genes[geneIndex] = Knight(position, boardSize)
     return genes
 
 
@@ -162,45 +172,50 @@ def knightPositions(boardSize):
     # A knight can attack at most, 4 squares from and edge,
     # whereas being located just one square away from any
     # edge increases that to 6 squares
-    allPositions = [Position(x, y)
-                    for y in range(boardSize.y)
-                    for x in range(boardSize.x)]
+    allPositions = [
+        Position(x, y) for y in range(boardSize.y) for x in range(boardSize.x)
+    ]
     if boardSize.x < 6 or boardSize.y < 6:
         nonEdgePositions = allPositions
         low_limit = 0
         x_limit = boardSize.x
         y_limit = boardSize.y
     else:
-        nonEdgePositions = [i for i in allPositions
-                            if 0 < i.x < boardSize.x - 1 and
-                            0 < i.y < boardSize.y]
+        nonEdgePositions = [
+            i
+            for i in allPositions
+            if 0 < i.x < boardSize.x - 1 and 0 < i.y < boardSize.y
+        ]
         low_limit = 1
         x_limit = boardSize.x - 1
         y_limit = boardSize.y - 1
 
     def get_randomPos():
-        return Position(random.randrange(low_limit, x_limit),
-                        random.randrange(low_limit, y_limit))
+        return Position(
+            random.randrange(low_limit, x_limit), random.randrange(low_limit, y_limit)
+        )
+
     start_t = datetime.now()
     optimal_fitness = boardSize.x * boardSize.y
     numOfKnights = get_NumKnigths(boardSize)
 
     best = genetic.get_best(
-        None, None, optimal_fitness,
-        get_fitness=lambda genes:
-            get_fitness(genes, boardSize),
-        display=lambda candidate:
-            display(candidate, start_t, boardSize),
-        custom_mutation=lambda genes:
-            mutate(genes, get_randomPos, boardSize,
-                   allPositions, nonEdgePositions),
-        custom_create=lambda:
-            create(numOfKnights, get_randomPos, boardSize))
+        None,
+        None,
+        optimal_fitness,
+        get_fitness=lambda genes: get_fitness(genes, boardSize),
+        display=lambda candidate: display(candidate, start_t, boardSize),
+        custom_mutation=lambda genes: mutate(
+            genes, get_randomPos, boardSize, allPositions, nonEdgePositions
+        ),
+        custom_create=lambda: create(numOfKnights, get_randomPos, boardSize),
+    )
     return best
 
 
 #################################################
 # Tests and Main Function #######################
+
 
 class KnightsTest(unittest.TestCase):
     def test_3x4(self):
@@ -210,5 +225,5 @@ class KnightsTest(unittest.TestCase):
         self.assertTrue(not optimal_fitness > best.fitness)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
