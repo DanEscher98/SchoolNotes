@@ -1,6 +1,8 @@
-import unittest
 import datetime
+import unittest
+
 import genetic
+from termcolor import colored
 
 
 class Fitness:
@@ -21,7 +23,7 @@ class Board:
         board = [["·"] * size for _ in range(size)]
         for column in range(0, len(genes)):
             row = genes[column]
-            board[row][column] = "♛"
+            board[row][column] = colored("♛", "red", attrs=["bold"])
         self.board = board
 
     def print(self):
@@ -88,7 +90,7 @@ class eightQueensTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    eightQueens(16)
+    eightQueens(150)
 
 # size=1000 -> Generation 491 Mutations: 2104125
 
